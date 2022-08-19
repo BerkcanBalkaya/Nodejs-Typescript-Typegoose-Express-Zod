@@ -1,0 +1,10 @@
+import express from "express";
+import user from "./user.routes";
+import auth from "./auth.routes";
+import diary from "./diary.routes";
+const router = express.Router();
+router.get("/healthcheck", (req, res) => res.sendStatus(200));
+router.use(user);
+router.use(auth);
+router.use(diary);
+export default router;
