@@ -12,7 +12,7 @@ import { User } from "./user.model";
   },
 })
 export class Diary {
-  @prop({ required: true, unique: true })
+  @prop({ required: true })
   title: string;
 
   @prop({ required: true })
