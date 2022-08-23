@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { object, string, TypeOf, z } from "zod";
 
 export const createUserSchema = object({
   body: object({
@@ -17,6 +17,10 @@ export const createUserSchema = object({
     email: string({
       required_error: "Email girilmesi zorunludur",
     }).email("Geçerli bir e posta adresi girmediniz."),
+    // * Kontrolü burada yapmak hatalı gibi geliyor. model kısmında pre içinde minik bir kontrol var ama moderator kısmını ne yapsak acaba
+    // role: z.enum(["Admin", "Moderator", "User"], {
+    //   invalid_type_error: "Belirtilen değerlerden birini girmediniz"
+    // }),
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Şifre eşleşmedi",
     path: ["passwordConfirmation"],
@@ -56,7 +60,20 @@ export const resetPasswordSchema = object({
   }),
 });
 
+export const assignRoleSchema = object({
+  params: object({
+    id: string(),
+  }),
+  body: object({
+    role: z.enum(["Admin", "Moderator", "User"], {
+      invalid_type_error:
+        "Önceden belirlenmiş rollerden(Admin, Moderator, User) birini girmediniz",
+    }),
+  }),
+});
+
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];
 export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>["body"];
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+export type AssignRoleInput = TypeOf<typeof assignRoleSchema>;
