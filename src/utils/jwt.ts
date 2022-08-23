@@ -29,3 +29,5 @@ export function verifyJwt<T>(
     return null;
   }
 }
+
+// TODO: single linear, SAST (STATİC APPLİCATİON SECURİTY TESTİNG), OWASP
