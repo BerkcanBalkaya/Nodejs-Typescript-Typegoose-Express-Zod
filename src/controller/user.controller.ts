@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import {
+  AssignRoleInput,
   CreateUserInput,
   ForgotPasswordInput,
   ResetPasswordInput,
@@ -10,6 +11,7 @@ import {
   createUser,
   findUserByEmail,
   findUserById,
+  getAdminCount,
 } from "../service/user.service";
 import log from "../utils/logger";
 import sendEmail from "../utils/mailer";
@@ -127,4 +129,25 @@ export async function resetPasswordHandler(
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
   return res.send(res.locals.user);
+}
+
+export async function assignRoleHandler(
+  req: Request<AssignRoleInput["params"], {}, AssignRoleInput["body"]>,
+  res: Response
+) {
+  const id = req.params.id;
+  const role = req.body.role;
+  const user = await findUserById(id);
+  const adminCount = await getAdminCount();
+  if (!user) {
+    return res.send("Kullanıcı bulunamadı");
+  }
+  if (adminCount < 1) {
+    return res.send("En az 1 adet admin bulunması zorunludur");
+  }
+  user.role = role;
+  user.save();
+  return res.send(
+    `${user.firstName} isimli kullanıcının rolü ${role} olacak şekilde değiştirildi.`
+  );
 }
