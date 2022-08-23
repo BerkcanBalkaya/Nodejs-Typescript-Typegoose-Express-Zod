@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import DiaryModel, { Diary } from "../model/diary.model";
 
 export function createDiary(input: Partial<Diary>) {
@@ -11,4 +10,8 @@ export function getAllDiaryById(id: string) {
 
 export function getDiaryById(id: string) {
   return DiaryModel.findById(id);
+}
+
+export function checkTitleExistsForUser(id: string, newTitle: string) {
+  return DiaryModel.findOne({ title: newTitle, user: id });
 }
