@@ -12,3 +12,11 @@ export function findUserByEmail(email: string) {
   // * .lean dendiği zaman asıl dokümanın json object halini elde ederiz.
   return UserModel.findOne({ email });
 }
+
+export function getAdminCount() {
+  return UserModel.count({ role: "Admin" });
+}
+
+export function anyAdminExists() {
+  return UserModel.findOne({ role: "Admin" });
+}
