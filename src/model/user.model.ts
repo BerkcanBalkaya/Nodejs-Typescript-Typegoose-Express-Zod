@@ -11,6 +11,7 @@ import {
 import { nanoid } from "nanoid";
 import argon2 from "argon2";
 import log from "../utils/logger";
+import { anyAdminExists } from "../service/user.service";
 
 export const privateFields = [
   "password",
@@ -21,6 +22,9 @@ export const privateFields = [
 ];
 
 @pre<User>("save", async function () {
+  if (!anyAdminExists()) {
+    this.role = "Admin";
+  }
   if (!this.isModified("password")) {
     return;
   }
@@ -61,6 +65,12 @@ export class User {
 
   @prop({ default: false })
   verified: boolean;
+
+  @prop({
+    default: "User",
+    enum: ["Admin", "Moderator", "User"],
+  })
+  role: string;
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
