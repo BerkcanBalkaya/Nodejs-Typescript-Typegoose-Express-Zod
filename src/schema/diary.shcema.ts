@@ -1,5 +1,11 @@
 import { object, string, TypeOf } from "zod";
 
+export const getDiarySchema = object({
+  params: object({
+    id: string(),
+  }),
+});
+
 export const createDiarySchema = object({
   body: object({
     title: string({
@@ -27,6 +33,7 @@ export const updateDiarySchema = object({
   }),
 });
 
+export type GetDiaryInput = TypeOf<typeof getDiarySchema>["params"];
 export type CreateDiaryInput = TypeOf<typeof createDiarySchema>["body"];
 export type DeleteDiaryInput = TypeOf<typeof deleteDiarySchema>["params"];
 export type UpdateDiaryInput = TypeOf<typeof updateDiarySchema>;
