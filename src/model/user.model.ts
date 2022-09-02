@@ -53,9 +53,9 @@ export class User {
 
   @prop({ required: true })
   password: string;
-
-  @prop({ ref: () => User })
-  diary: Ref<User>[];
+  // * child reference artık kullanmıyoruz bu yüzden yorum satırı haline getirdik.
+  // @prop({ ref: () => User })
+  // diary: Ref<User>[];
 
   @prop({ required: true, default: () => nanoid() })
   verificationCode: string;
