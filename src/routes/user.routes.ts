@@ -8,7 +8,6 @@ import {
   verifyUserHandler,
 } from "../controller/user.controller";
 import requireAdmin from "../middleware/checkAdminExists";
-import checkAdminExists from "../middleware/checkAdminExists";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResourse";
 import {
