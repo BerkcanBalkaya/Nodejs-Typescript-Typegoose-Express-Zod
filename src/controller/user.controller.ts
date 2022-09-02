@@ -22,7 +22,7 @@ export async function createUserHandler(
   res: Response
 ) {
   const body = req.body;
-  console.log(body);
+  // console.log(body);
 
   try {
     const user = await createUser(body);
@@ -53,11 +53,11 @@ export async function verifyUserHandler(
   const id = req.params.id;
   const verificationCode = req.params.verificationCode;
 
-  console.log(req.params);
+  // console.log(req.params);
 
   // * Kullanıcıyı id sine göre bul
   const user = await findUserById(id);
-  console.log(user);
+  // console.log(user);
   if (!user) {
     return res.send("Kullanıcı bulunamadı");
   }
