@@ -159,13 +159,13 @@ export async function updateDiaryHandler(
     const diary = await getDiaryById(diaryId);
     // TODO: Burada han var mı yok mu emin olamadığımız için kullandığımız soru işaretleri yerine farklı bir yaklaşımla boş olamayacağını söyleyebilir miyiz
     if (!diary) {
-      return res.send({
+      return res.status(404).send({
         message: "Lütfen bu id ye ait bir diaryi olduğundan emin olun",
         body: diaryId,
       });
     }
     if (userId !== diary?.user?.toString() || "") {
-      return res.send({
+      return res.status(403).send({
         message:
           "Lütfen güncellemek istediğiniz diary'nin size ait olduğundan emin olun",
         body: diaryId,
