@@ -3,21 +3,23 @@ pipeline{
     stages {
         stage("build"){
             steps{
-                // Buraya npm install tarzı komutlar
-                echo "Uygulama oluşturuluyor"
+                // Buraya npm install tarzÄ± komutlar
+                sh "node -v"
+                sh "npm install"
+                echo "Uygulama olusturuluyor"
             }
         }
         stage("test"){
             steps{
                 // test scriptleri
-                sh "npx jest --silence=false --watchAll --setupFiles dotenv/config"
+                sh "npx jest --silence=false --setupFiles dotenv/config"
                 echo "Uygulama test ediliyor"
             }
         }
         stage("deploy"){
             steps{
-                // Yükleme scriptleri
-                echo "Uygulama yükleniyor"
+                // YÃ¼kleme scriptleri
+                echo "Uygulama yukleniyor"
             }
         }
     }
