@@ -129,7 +129,7 @@ describe("diary", () => {
           expiresIn: "60m",
         });
       });
-      it("should return 403 and the message", async () => {
+      it("should return 403 and the appropriate message", async () => {
         const diary = await createDiary(diaryPayload);
         const outcome = await supertest(app)
           .get(`/api/diaries/${diary._id.toString()}`)
@@ -214,7 +214,7 @@ describe("diary", () => {
       });
     });
     describe("given the user is logged in and diary does exist", () => {
-      it("should return 200 and deleted diary", async () => {
+      it("should return a 200 and deleted diary", async () => {
         const diary = await createDiary(diaryPayload);
         const outcome = await supertest(app)
           .delete(`/api/diaries/${diary._id.toString()}`)
@@ -231,6 +231,101 @@ describe("diary", () => {
           updatedAt: expect.any(String),
           __v: expect.any(Number),
         });
+      });
+    });
+    describe("given the user is logged in and diary does exist but it's not user's diary", () => {
+      beforeEach(async () => {
+        jwtKey = await signJwt(diaryUserPayload2, "accessTokenPrivateKey", {
+          expiresIn: "60m",
+        });
+      });
+      afterEach(async () => {
+        jwtKey = await signJwt(diaryUserPayload, "accessTokenPrivateKey", {
+          expiresIn: "60m",
+        });
+      });
+      it("should return 403 and the appropriate message", async () => {
+        const diary = await createDiary(diaryPayload);
+        const outcome = await supertest(app)
+          .delete(`/api/diaries/${diary._id.toString()}`)
+          .set("Authorization", `Bearer ${jwtKey}`);
+
+        expect(outcome.statusCode).toBe(403);
+
+        expect(outcome.body.message).toEqual(
+          "Lütfen silmek istediğiniz diary'nin size ait olduğundan emin olun"
+        );
+      });
+    });
+  });
+  describe("update diary route", () => {
+    describe("given the user is not logged in", () => {
+      it("should return a 403", async () => {
+        const diaryId = randomId;
+        const outcome = await supertest(app)
+          .put(`/api/diaries/${diaryId}`)
+          .send(diaryPayload);
+
+        expect(outcome.statusCode).toBe(403);
+      });
+    });
+    describe("given the user is logged in but diary does not exist", () => {
+      it("should return a 404 and diaryId pathVariable", async () => {
+        const diaryId = randomId;
+        const outcome = await supertest(app)
+          .put(`/api/diaries/${diaryId}`)
+          .set("Authorization", `Bearer ${jwtKey}`)
+          .send(diaryPayload);
+
+        expect(outcome.statusCode).toBe(404);
+        expect(outcome.body.body).toEqual(diaryId.toString());
+      });
+    });
+    describe("given the user is logged in and diary does exist", () => {
+      it("should return a 200 and return updated diary", async () => {
+        const diary = await createDiary(diaryPayload);
+        const outcome = await supertest(app)
+          .put(`/api/diaries/${diary._id.toString()}`)
+          .set("Authorization", `Bearer ${jwtKey}`)
+          .send(diaryPayload2);
+
+        console.log(outcome.body.body);
+        console.log(diaryPayload2);
+
+        expect(outcome.statusCode).toBe(200);
+        expect(outcome.body.body).toEqual({
+          _id: diary._id.toString(),
+          title: diaryPayload2.title,
+          body: diaryPayload2.body,
+          user: diary.user?.toString(),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          __v: expect.any(Number),
+        });
+      });
+    });
+    describe("given the user is logged in and diary does exist but it's not user's diary", () => {
+      beforeEach(async () => {
+        jwtKey = await signJwt(diaryUserPayload2, "accessTokenPrivateKey", {
+          expiresIn: "60m",
+        });
+      });
+      afterEach(async () => {
+        jwtKey = await signJwt(diaryUserPayload, "accessTokenPrivateKey", {
+          expiresIn: "60m",
+        });
+      });
+      it("should return 403 and the appropriate message", async () => {
+        const diary = await createDiary(diaryPayload);
+        const outcome = await supertest(app)
+          .put(`/api/diaries/${diary._id.toString()}`)
+          .set("Authorization", `Bearer ${jwtKey}`)
+          .send(diaryPayload2);
+
+        expect(outcome.statusCode).toBe(403);
+        expect(outcome.body.message).toEqual(
+          "Lütfen güncellemek istediğiniz diary'nin size ait olduğundan emin olun"
+        );
       });
     });
   });
