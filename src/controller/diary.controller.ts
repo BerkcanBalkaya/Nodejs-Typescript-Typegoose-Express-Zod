@@ -73,9 +73,7 @@ export async function createDiaryHandler(
   req: Request<{}, {}, CreateDiaryInput>,
   res: Response
 ) {
-  // * referans koparmak için yaptım ama başka yolu var mı acaba
   const body = Object.assign(req.body);
-  // console.log(body);
   const userId = res.locals.user._id;
   body.user = userId;
 
@@ -93,13 +91,6 @@ export async function createDiaryHandler(
       body: diary,
     });
   } catch (e: any) {
-    // * Aşağıda eski modeldeki unique title mantığına göre hata döndüğünde yakalamamızı sağlayan catch mantığı var ama her kullanıcı kendi hesabında title 1 diye oluşturabilsin ve kullanıcılarının birbirnini kısıtlamaması için yukarıya farklı bir if kontrolü konuldu.
-    // if (e.code === 11000) {
-    //   return res.status(409).send({
-    //     message: "Oluşturulmaya çalışılan diary başlığı zaten bulunmakta",
-    //     body: "",
-    //   });
-    // }
     return res.status(500).send({
       message: "Bir şeyler ters gitti.",
       body: e,
@@ -116,14 +107,12 @@ export async function deleteDiaryHandler(
 
   try {
     const diary = await getDiaryById(diaryId);
-    // TODO: Hani null dönmesinin bana göre bir yolu yok ama yine de sormak istedim belki döner diye
     if (!diary) {
       return res.status(404).send({
         message: "Lütfen bu id ye ait bir diaryi olduğundan emin olun",
         body: diaryId,
       });
     }
-    // console.log(diaryId, userId);
 
     if (userId !== diary?.user?.toString() || null) {
       return res.status(403).send({
@@ -153,7 +142,6 @@ export async function updateDiaryHandler(
   const { title, body } = req.body;
   const userId = res.locals.user._id;
 
-  // console.log(userId, id);
 
   try {
     const diary = await getDiaryById(diaryId);
@@ -185,7 +173,3 @@ export async function updateDiaryHandler(
     });
   }
 }
-
-// TODO: 1)Bu kullanıcı bilgilerinin nasıl alındığına bir daha baktım ve bu bilgileri jwt token içerisinden alıyor muşuz biz.
-// * Peki o zaman kullanıcı bilgilerinin mesela admin olup olmadığı gibi jwt token içerisinde tutmamız ne kadar doğru bu token üzerinde oynama yapılıp kullanıcı kendisini admin gibi gösterip token atabilir mi
-// * Eğer atabiliyorsa bu benim tarafta güvenlik açığı doğurur.
