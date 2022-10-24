@@ -19,13 +19,12 @@ let jwtKey = signJwt(diaryUserPayload, "accessTokenPrivateKey", {
   expiresIn: "60m",
 });
 
-// * Buradaki describe mimarisi şöyle işliyor ne test ediliyor -> hangi özelliği test ediliyor -> hangi koşulda test ediliyor gibi
 describe("diary", () => {
   beforeEach(async () => {
     const mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
   });
-  // TODO: burada beforeAll yerine beforeEach kullanmamızın sebebi payloadların birden fazla test için unique constraintine takılması. Ama beforeEach bir tık yavaşlatıyor bunun yerine payload yenielemek daha mı mantıklı olur acaba ?
+  
   afterEach(async () => {
     await mongoose.disconnect();
     await mongoose.connection.close();
