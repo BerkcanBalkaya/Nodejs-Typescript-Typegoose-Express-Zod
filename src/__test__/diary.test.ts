@@ -330,21 +330,3 @@ describe("diary", () => {
     });
   });
 });
-
-// TODO: Şimdilik open handles ile timeout hatası almamızın sebebi mongodb bağlantısı kuramamazdı bunu mongodb memory server ile çözdük
-// TODO: Artık elimizdeki en büyük sorun userRequired middleware'i ile res.locals den aldığımız id ile controllerda yaptığımız user kontrolleri
-// TODO: Şu an troubleshoutingler ile takip ettiğime göre testler içerisinde deserializeUserdan çıkamıyoruz ve tam olarak decoded = verifyJwt kısmında patlıyoruz
-// TODO: jwt içerisinde singJwt ye koyduğum loga göre signinKey tarafında |tHT♦D|!↑ şöyle bir key elimize geçiyor ve bunla jwt.sign a gidince hata alıyoruz
-// TODO: jwt kısmını falan geçtik sorun .env kısmını kullanmakta kodumuz şu npx jest --silence=false --watchAll --setupFiles dotenv/config
-// * Dikkat edilmesi gerekenler
-// *   Öncelikle middlewarelerden dönen sonuçlara dikkat et mesela 403 forbidden beklerken schemaya uymadığı için başka bir hata alabilirsin gibi
-
-// console.log(process.env);
-
-// console.log(diary);
-
-// const jwtKey = jwt.sign(
-//   userPayload,
-//   "accessTokenPrivateKey"
-//   // ,{algorithm: "RS256",}
-// );
